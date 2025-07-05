@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cloud Expense Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<h1>Welcome to the Cloud Expense Tracker</h1>
+<p>This a web application hosted on AWS S3</p>
+
+<form id="expense-form" onsubmit="addExpense(); return false;">
+  <label>Amount:</label><br>
+  <input type="number" id="amount" placeholder="€0.00" step="0.01" required><br><br>
+
+  <label>Description:</label><br>
+  <input type="text" id="description" required><br><br>
+
+  <button type="submit">Add Expense</button>
+</form>
+
+<div id="message"></div>
+
+<h2>Saved Expenses</h2>
+<div id="expense-list"></div>
+
+<script>
+function addExpense() {
+  const amount = parseFloat(document.getElementById("amount").value);
+  const description = document.getElementById("description").value;
+
+  fetch("https://lo6k41cwye.execute-api.eu-west-1.amazonaws.com/prod/expenses", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({amount, description})
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("message").innerText = "Expense added!";
+    document.getElementById("expense-form").reset();
+    fetchExpenses();
+  })
+  .catch(error => {
+    document.getElementById("message").innerText = "Error adding expense";
+    console.error(error);
+  });
+}
+
+function fetchExpenses() {
+  fetch("https://lo6k41cwye.execute-api.eu-west-1.amazonaws.com/prod/expenses")
+  .then(res => res.json())
+  .then(data => {
+    const expenseList = document.getElementById("expense-list");
+    expenseList.innerHTML = "";
+    
+    if (data.length === 0) {
+      expenseList.innerHTML = "<p>No expenses found.</p>";
+      return;
+    }
+
+    data.forEach(expense => {
+      const div = document.createElement("div");
+      div.innerHTML = `<strong>€${expense.amount}</strong> - ${expense.description}`;
+      expenseList.appendChild(div);
+    });
+  })
+  .catch(error => {
+    document.getElementById("expense-list").innerHTML = "<p>Error loading expenses</p>";
+    console.error(error);
+  });
+}
+
+window.onload = fetchExpenses;
+</script>
+
+</body>
+</html>
