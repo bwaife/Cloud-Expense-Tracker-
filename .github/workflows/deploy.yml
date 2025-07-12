@@ -20,6 +20,15 @@
     
           - name: Install AWS CLI
             run: pip install awscli
+
+          - name: Debug - List files
+            run: |
+              echo "Current directory:"
+              pwd
+              echo "Files in current directory:"
+              ls -la
+              echo "Looking for createExpense:"
+              find . -name "*createExpense*" -o -name "*expense*"
     
           - name: Zip Lambda Function Code
             run: |
