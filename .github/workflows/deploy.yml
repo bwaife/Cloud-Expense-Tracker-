@@ -23,7 +23,7 @@
     
           - name: Zip Lambda Function Code
             run: |
-              cd /expnse-tracker/expense-tracker/createExpense
+              cd ./expense-tracker/expense-tracker/createExpense
               zip -r ../lambda_function.zip .
     
           - name: Deploy to AWS Lambda
