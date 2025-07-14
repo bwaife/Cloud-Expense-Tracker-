@@ -20,16 +20,17 @@ Resources:
       Architectures:
         - x86_64
       Events:
-        GetExpense:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /expense
-            Method: POST
-        PostExpense:
-          Type: Api
-          Properties:
-            Path: /expense
-            Method: GET
+  PostExpense:
+    Type: Api
+    Properties:
+      Path: /expense
+      Method: POST  # POST should be for adding expenses
+  GetExpense:
+    Type: Api
+    Properties:
+      Path: /expense
+      Method: GET   # GET should be for retrieving expenses
+
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
